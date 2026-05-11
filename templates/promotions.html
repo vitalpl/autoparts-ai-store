@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="uk" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Акції та знижки — AutoParts AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>[x-cloak]{display:none!important}</style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-full flex flex-col antialiased">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur border-b border-slate-800">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+            <a href="/" class="flex items-center gap-2 shrink-0">
+                <svg class="w-7 h-7 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="8" cy="17" r="1.5" fill="currentColor"/><circle cx="16" cy="17" r="1.5" fill="currentColor"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M1 17l2-9h18l2 9"/><path stroke-linecap="round" stroke-linejoin="round" d="M5 8l1-4h12l1 4"/>
+                </svg>
+                <span class="text-lg font-extrabold tracking-tight">Auto<span class="text-amber-400">Parts</span> <span class="text-slate-400 font-light text-base">AI</span></span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1 text-sm text-slate-400">
+                <a href="/" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Головна</a>
+                <a href="/delivery" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Доставка</a>
+                <a href="/payment" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Оплата</a>
+                <a href="/contacts" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Контакти</a>
+            </nav>
+            <a href="/" class="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm transition">
+                ← Назад на головну
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="flex-1 max-w-screen-xl mx-auto w-full px-4 sm:px-6 py-10">
+
+        <div class="mb-8">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                🔥 <span class="text-amber-400">Акції та знижки</span> на автозапчастини
+            </h1>
+            <p class="text-slate-400 mt-2">Актуальні пропозиції для наших клієнтів. Кількість товарів за акційними цінами обмежена.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+
+            <!-- 1 -->
+            <div class="bg-slate-900 border border-slate-800 hover:border-amber-400/50 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                <div class="w-12 h-12 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-2xl">🛢️</div>
+                <div class="inline-flex self-start px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-400 text-slate-950">-15%</div>
+                <h3 class="font-bold text-slate-100 leading-snug">Знижка -15% на всі моторні оливи</h3>
+                <p class="text-slate-400 text-sm flex-1">Весь асортимент моторних олив: Castrol, Mobil, Shell, ZIC та інші бренди — зі знижкою 15%.</p>
+                <p class="text-xs text-slate-500">Діє до 31.05.2026</p>
+            </div>
+
+            <!-- 2 -->
+            <div class="bg-slate-900 border border-slate-800 hover:border-emerald-400/50 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                <div class="w-12 h-12 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-2xl">⚙️</div>
+                <div class="inline-flex self-start px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-400 text-slate-950">АКЦІЯ</div>
+                <h3 class="font-bold text-slate-100 leading-snug">Комплект ГРМ + Помпа: Безкоштовна доставка</h3>
+                <p class="text-slate-400 text-sm flex-1">Купуйте комплект ГРМ разом із помпою охолоджувальної рідини — і отримайте безкоштовну доставку по всій Україні.</p>
+                <p class="text-xs text-slate-500">Без обмежень за часом</p>
+            </div>
+
+            <!-- 3 -->
+            <div class="bg-slate-900 border border-slate-800 hover:border-red-400/50 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                <div class="w-12 h-12 rounded-xl bg-red-400/10 border border-red-400/20 flex items-center justify-center text-2xl">🛑</div>
+                <div class="inline-flex self-start px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-red-500 text-white">-20%</div>
+                <h3 class="font-bold text-slate-100 leading-snug">-20% на гальмівні колодки Brembo при купівлі дисків</h3>
+                <p class="text-slate-400 text-sm flex-1">Придбайте гальмівні диски будь-якого виробника та отримайте знижку 20% на колодки Brembo для того ж автомобіля.</p>
+                <p class="text-xs text-slate-500">Діє до вичерпання запасів</p>
+            </div>
+
+            <!-- 4 -->
+            <div class="bg-slate-900 border border-slate-800 hover:border-blue-400/50 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                <div class="w-12 h-12 rounded-xl bg-blue-400/10 border border-blue-400/20 flex items-center justify-center text-2xl">⚡</div>
+                <div class="inline-flex self-start px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-500 text-white">3+1</div>
+                <h3 class="font-bold text-slate-100 leading-snug">Свічки запалювання Bosch: 4 шт. за ціною 3</h3>
+                <p class="text-slate-400 text-sm flex-1">Суперціна на комплект свічок запалювання Bosch. Купуйте 4 штуки та платіть лише за 3 — економія до 25%!</p>
+                <p class="text-xs text-slate-500">Діє до 15.06.2026</p>
+            </div>
+
+            <!-- 5 -->
+            <div class="bg-slate-900 border border-slate-800 hover:border-amber-400/50 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                <div class="w-12 h-12 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-2xl">🔋</div>
+                <div class="inline-flex self-start px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-400 text-slate-950">-10%</div>
+                <h3 class="font-bold text-slate-100 leading-snug">-10% на акумулятори при здачі старого</h3>
+                <p class="text-slate-400 text-sm flex-1">Здайте ваш старий акумулятор і отримайте знижку 10% на новий. Програма діє на всі бренди: Bosch, Varta, Exide.</p>
+                <p class="text-xs text-slate-500">Постійна програма утилізації</p>
+            </div>
+
+            <!-- 6 -->
+            <div class="bg-slate-900 border border-slate-800 hover:border-emerald-400/50 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                <div class="w-12 h-12 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-2xl">🔧</div>
+                <div class="inline-flex self-start px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-400 text-slate-950">БЕЗКОШТОВНО</div>
+                <h3 class="font-bold text-slate-100 leading-snug">Безкоштовна діагностика підвіски від СТО</h3>
+                <p class="text-slate-400 text-sm flex-1">При купівлі деталей підвіски на суму від 2000 грн — безкоштовна комп'ютерна діагностика ходової частини у нашій мережі СТО.</p>
+                <p class="text-xs text-slate-500">Потрібен попередній запис</p>
+            </div>
+
+            <!-- 7 -->
+            <div class="bg-slate-900 border border-slate-800 hover:border-sky-400/50 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                <div class="w-12 h-12 rounded-xl bg-sky-400/10 border border-sky-400/20 flex items-center justify-center text-2xl">🪟</div>
+                <div class="inline-flex self-start px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-sky-500 text-white">-25%</div>
+                <h3 class="font-bold text-slate-100 leading-snug">-25% на сезонні склоочисники (двірники)</h3>
+                <p class="text-slate-400 text-sm flex-1">Сезонна акція на двірники Bosch, Valeo, Magneti Marelli. Підготуйте авто до злив — зі знижкою 25%!</p>
+                <p class="text-xs text-slate-500">Тільки до кінця травня 2026</p>
+            </div>
+
+            <!-- 8 -->
+            <div class="bg-slate-900 border border-emerald-500/30 hover:border-emerald-400 rounded-2xl p-5 flex flex-col gap-3 transition group relative overflow-hidden">
+                <div class="absolute inset-0 bg-emerald-400/3 pointer-events-none"></div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-2xl">🇺🇦</div>
+                <div class="inline-flex self-start px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-500 text-white">-15% ЗСУ</div>
+                <h3 class="font-bold text-emerald-300 leading-snug">Спеціальні умови для військових (ЗСУ)</h3>
+                <p class="text-slate-400 text-sm flex-1">Для всіх військовослужбовців ЗСУ, ТРО та ветеранів — постійна додаткова знижка 15% на весь каталог. Слава Україні!</p>
+                <p class="text-xs text-emerald-500 font-semibold">Потрібне посвідчення або фото</p>
+            </div>
+
+        </div>
+
+        <div class="mt-10 text-center">
+            <a href="/" class="inline-flex items-center gap-2 px-6 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-xl transition">
+                ← Назад на головну
+            </a>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-8 border-t border-slate-800 bg-slate-900/50">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <p class="font-bold text-sm mb-1">Auto<span class="text-amber-400">Parts</span> AI</p>
+                <p class="text-xs text-slate-500">Розумний підбір автозапчастин на основі штучного інтелекту Google Gemini.</p>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">Про проєкт</p>
+                <ul class="text-xs text-slate-500 space-y-0.5">
+                    <li><span class="text-slate-400">Автор:</span> Андрій Плекан</li>
+                    <li><span class="text-slate-400">Група:</span> 46п &nbsp;·&nbsp; <span class="text-slate-400">Коледж:</span> saceit</li>
+                    <li><span class="text-slate-400">Рік:</span> 2026</li>
+                </ul>
+            </div>
+            <div class="flex flex-wrap gap-1.5 content-start">
+                <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">FastAPI</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">SQLAlchemy</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Google Gemini</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Tailwind CSS</span>
+            </div>
+        </div>
+        <div class="border-t border-slate-800 py-3 text-center text-xs text-slate-600">&copy; 2026 AutoParts AI. Всі права захищено.</div>
+    </footer>
+</body>
+</html>

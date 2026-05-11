@@ -1,0 +1,25 @@
+# Секрети та змінні оточення
+.env
+.env.*
+!.env.example
+
+# Віртуальне оточення Python
+.venv/
+venv/
+env/
+
+# База даних SQLite
+*.db
+*.sqlite3
+
+# Кеш Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# VS Code
+.vscode/
+
+# Системні файли
+.DS_Store
+Thumbs.db
