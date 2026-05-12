@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="uk" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гальмівні колодки барабанні — AutoParts AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        @keyframes toast-in  { from { opacity:0; transform:translateY(16px) scale(.95); } to { opacity:1; transform:translateY(0) scale(1); } }
+        @keyframes toast-out { from { opacity:1; transform:translateY(0) scale(1); }   to { opacity:0; transform:translateY(-12px) scale(.95); } }
+        .toast-enter { animation: toast-in .3s ease forwards; }
+        .toast-leave { animation: toast-out .3s ease forwards; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-full flex flex-col antialiased" x-data="cartPage()">
+
+    <!-- TOAST -->
+    <div x-cloak
+         x-show="toast"
+         :class="toastLeaving ? 'toast-leave' : 'toast-enter'"
+         class="fixed bottom-6 right-6 z-[200] flex items-center gap-3 px-5 py-3 bg-emerald-500 text-white font-semibold rounded-2xl shadow-xl shadow-emerald-900/40 pointer-events-none">
+        <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+        Товар додано до кошика!
+    </div>
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur border-b border-slate-800">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+
+            <!-- Logo -->
+            <a href="/" class="flex items-center gap-2 shrink-0">
+                <svg class="w-7 h-7 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="8" cy="17" r="1.5" fill="currentColor"/><circle cx="16" cy="17" r="1.5" fill="currentColor"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M1 17l2-9h18l2 9"/><path stroke-linecap="round" stroke-linejoin="round" d="M5 8l1-4h12l1 4"/>
+                </svg>
+                <span class="text-lg font-extrabold tracking-tight">Auto<span class="text-amber-400">Parts</span> <span class="text-slate-400 font-light text-base">AI</span></span>
+            </a>
+
+            <!-- Nav -->
+            <nav class="hidden md:flex items-center gap-1 text-sm text-slate-400">
+                <a href="/" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Головна</a>
+                <a href="/catalog/brake-pads" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Дискові колодки</a>
+                <a href="/delivery" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Доставка</a>
+                <a href="/contacts" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Контакти</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <!-- Cart button -->
+                <button @click="cartOpen = !cartOpen"
+                        class="relative flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-sm font-semibold transition">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.962-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/>
+                    </svg>
+                    Кошик
+                    <span x-show="cartItems.length > 0" x-cloak
+                          class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-400 text-slate-950 text-xs font-extrabold flex items-center justify-center"
+                          x-text="cartItems.length"></span>
+                </button>
+
+                <!-- Back button -->
+                <a href="/" class="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm transition">
+                    ← Головна
+                </a>
+            </div>
+        </div>
+
+        <!-- Cart dropdown -->
+        <div x-show="cartOpen" x-cloak @click.outside="cartOpen = false"
+             class="absolute right-4 top-full mt-2 w-80 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden">
+            <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                <span class="font-bold text-sm">🛒 Кошик</span>
+                <span class="text-xs text-slate-500" x-text="cartItems.length + ' товар(ів)'"></span>
+            </div>
+            <div class="max-h-60 overflow-y-auto divide-y divide-slate-800">
+                <template x-if="cartItems.length === 0">
+                    <p class="text-center text-slate-500 text-sm py-6">Кошик порожній</p>
+                </template>
+                <template x-for="(item, idx) in cartItems" :key="idx">
+                    <div class="flex items-center gap-3 px-4 py-3">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-semibold text-slate-200 truncate" x-text="item.name"></p>
+                            <p class="text-xs text-slate-500" x-text="item.article"></p>
+                        </div>
+                        <span class="text-emerald-400 font-bold text-sm shrink-0" x-text="item.price + ' грн'"></span>
+                        <button @click="cartItems.splice(idx,1)" class="text-slate-600 hover:text-red-400 transition ml-1 shrink-0">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </template>
+            </div>
+            <div class="px-4 py-3 border-t border-slate-800 flex items-center justify-between">
+                <span class="text-xs text-slate-400">Разом:</span>
+                <span class="font-extrabold text-emerald-400" x-text="cartTotal + ' грн'"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="flex-1 max-w-screen-xl mx-auto w-full px-4 sm:px-6 py-10">
+
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 text-xs text-slate-500 mb-6 flex-wrap">
+            <a href="/" class="hover:text-slate-300 transition">Головна</a>
+            <span>›</span>
+            <span>Каталог</span>
+            <span>›</span>
+            <span>Гальмівна система</span>
+            <span>›</span>
+            <span class="text-emerald-400 font-semibold">Гальмівні колодки барабанні</span>
+        </nav>
+
+        <!-- Title -->
+        <div class="mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                🥁 <span class="text-emerald-400">Барабанні гальмівні колодки</span>
+            </h1>
+            <p class="text-slate-400 mt-2 max-w-2xl">Надійні колодки для барабанної гальмівної системи від провідних світових виробників. Тривалий ресурс, стабільне гальмування на будь-яких швидкостях.</p>
+        </div>
+
+        <!-- ─── SECTION 1: Освітня довідка ─── -->
+        <section class="mb-14">
+            <h2 class="text-xl font-extrabold mb-1 text-slate-100">📘 Особливості барабанних колодок</h2>
+            <p class="text-slate-500 text-sm mb-6">Чим барабанна система відрізняється від дискової — і коли це перевага</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+                <!-- Конструкція -->
+                <div class="bg-slate-900 border border-slate-800 hover:border-emerald-500/30 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-xl group-hover:border-emerald-400/40 transition">🔧</div>
+                    <p class="font-bold text-slate-100">Конструкція</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Барабанні колодки мають <strong class="text-slate-200">вигнуту напівкруглу форму</strong> і встановлюються всередині металевого гальмівного барабана. При гальмуванні колодки розтискаються назовні та притискаються до внутрішньої поверхні барабана.</p>
+                </div>
+
+                <!-- Ресурс -->
+                <div class="bg-slate-900 border border-slate-800 hover:border-emerald-500/30 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                    <div class="w-11 h-11 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-xl group-hover:border-amber-400/40 transition">📅</div>
+                    <p class="font-bold text-slate-100">Тривалий ресурс</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Барабанні колодки, як правило, <strong class="text-slate-200">служать довше за дискові</strong> — до <strong class="text-slate-200">60–80 тис. км</strong>. Це пов'язано з більшою площею фрикційного матеріалу та закритою конструкцією барабана.</p>
+                </div>
+
+                <!-- Нагрів -->
+                <div class="bg-slate-900 border border-slate-800 hover:border-orange-500/30 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                    <div class="w-11 h-11 rounded-xl bg-orange-400/10 border border-orange-400/20 flex items-center justify-center text-xl group-hover:border-orange-400/40 transition">🌡️</div>
+                    <p class="font-bold text-slate-100">Чутливість до нагріву</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Через закриту конструкцію барабан гірше охолоджується. При <strong class="text-slate-200">екстремальних навантаженнях</strong> (довгі гірські спуски, часте різке гальмування) колодки можуть перегрітися — це знижує ефективність гальм.</p>
+                </div>
+
+                <!-- Застосування -->
+                <div class="bg-slate-900 border border-slate-800 hover:border-blue-500/30 rounded-2xl p-5 flex flex-col gap-3 transition group">
+                    <div class="w-11 h-11 rounded-xl bg-blue-400/10 border border-blue-400/20 flex items-center justify-center text-xl group-hover:border-blue-400/40 transition">🚗</div>
+                    <p class="font-bold text-slate-100">Де застосовуються</p>
+                    <p class="text-sm text-slate-400 leading-relaxed">Барабанні гальма традиційно встановлюються на <strong class="text-slate-200">задній осі</strong> бюджетних і середнього класу автомобілів: Chevrolet Lanos/Aveo, Ford Focus, VW Golf/Passat, а також виконують роль стояночного (ручного) гальма.</p>
+                </div>
+
+            </div>
+
+            <!-- Порівняння з дисковими -->
+            <div class="mt-6 p-5 bg-slate-900 border border-slate-800 rounded-2xl">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Барабанні vs Дискові — коротко</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                    <div class="space-y-2">
+                        <p class="font-semibold text-emerald-400 text-xs uppercase tracking-wide mb-1">✅ Переваги барабанних</p>
+                        <div class="flex items-center gap-2 text-slate-400"><span class="text-emerald-400">✔</span> Більший ресурс (60–80 тис. км)</div>
+                        <div class="flex items-center gap-2 text-slate-400"><span class="text-emerald-400">✔</span> Менша вартість комплекту</div>
+                        <div class="flex items-center gap-2 text-slate-400"><span class="text-emerald-400">✔</span> Ефективне ручне гальмо</div>
+                        <div class="flex items-center gap-2 text-slate-400"><span class="text-emerald-400">✔</span> Захищені від бруду та вологи</div>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="font-semibold text-red-400 text-xs uppercase tracking-wide mb-1">⚠️ Недоліки</p>
+                        <div class="flex items-center gap-2 text-slate-400"><span class="text-red-400">✘</span> Гірше охолоджуються</div>
+                        <div class="flex items-center gap-2 text-slate-400"><span class="text-red-400">✘</span> Складніше обслуговування</div>
+                        <div class="flex items-center gap-2 text-slate-400"><span class="text-red-400">✘</span> Менш ефективні при перегріві</div>
+                        <div class="flex items-center gap-2 text-slate-400"><span class="text-red-400">✘</span> Слабші при спортивній їзді</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── SECTION 2: Каталог товарів ─── -->
+        <section class="mb-14">
+            <h2 class="text-xl font-extrabold mb-1 text-slate-100">🔥 Популярні пропозиції</h2>
+            <p class="text-slate-500 text-sm mb-6">Топ барабанних колодок — перевірена якість для найпоширеніших авто України</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+                <!-- LPR -->
+                <div class="bg-slate-900 border border-slate-800 hover:border-emerald-500/30 rounded-2xl overflow-hidden flex flex-col transition group">
+                    <div class="h-2 bg-gradient-to-r from-emerald-500 to-teal-400"></div>
+                    <div class="p-5 flex flex-col flex-1 gap-3">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <p class="text-xs text-slate-500 font-semibold uppercase tracking-widest">LPR · Італія</p>
+                                <h3 class="font-extrabold text-slate-100 text-lg leading-snug mt-0.5">Тлумач</h3>
+                                <span class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 font-semibold">⚙️ Середній клас</span>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <p class="text-2xl font-extrabold text-emerald-400">820</p>
+                                <p class="text-xs text-slate-500">грн / комплект</p>
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-slate-500 font-mono bg-slate-800/50 px-2.5 py-1 rounded-lg w-fit">LPR-05P112</div>
+
+                        <p class="text-sm text-slate-400 leading-relaxed flex-1">Надійні барабанні колодки від перевіреного італійського виробника. Оптимальне поєднання ціни та якості для масового ринку. Рівномірне гальмування, мінімальний пил.</p>
+
+                        <div class="flex items-center gap-1.5 text-xs text-slate-500 flex-wrap">
+                            <span class="px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Lanos</span>
+                            <span class="px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Aveo</span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+                            <span class="text-xs text-emerald-400 font-semibold">В наявності</span>
+                        </div>
+
+                        <button @click="addToCart('LPR Тлумач', 'LPR-05P112', 820)"
+                                class="w-full mt-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-extrabold text-sm transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                            </svg>
+                            Додати в кошик
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TRW -->
+                <div class="bg-slate-900 border border-slate-800 hover:border-blue-500/30 rounded-2xl overflow-hidden flex flex-col transition group ring-1 ring-blue-500/10">
+                    <div class="h-2 bg-gradient-to-r from-blue-500 to-blue-400"></div>
+                    <div class="p-5 flex flex-col flex-1 gap-3">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <p class="text-xs text-slate-500 font-semibold uppercase tracking-widest">TRW · Німеччина</p>
+                                <h3 class="font-extrabold text-slate-100 text-lg leading-snug mt-0.5">Automotive</h3>
+                                <span class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-blue-400/10 text-blue-300 border border-blue-400/20 font-semibold">💎 Преміум</span>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <p class="text-2xl font-extrabold text-emerald-400">1 450</p>
+                                <p class="text-xs text-slate-500">грн / комплект</p>
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-slate-500 font-mono bg-slate-800/50 px-2.5 py-1 rounded-lg w-fit">TRW-GS8455</div>
+
+                        <p class="text-sm text-slate-400 leading-relaxed flex-1">Преміальні барабанні колодки TRW з підвищеною стійкістю до нагріву та розширеним терміном служби. Стабільне гальмування навіть при тривалих навантаженнях. Ресурс до 70 000 км.</p>
+
+                        <div class="flex items-center gap-1.5 text-xs text-slate-500 flex-wrap">
+                            <span class="px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">VW Golf</span>
+                            <span class="px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">VW Passat</span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+                            <span class="text-xs text-emerald-400 font-semibold">В наявності</span>
+                        </div>
+
+                        <button @click="addToCart('TRW Automotive', 'TRW-GS8455', 1450)"
+                                class="w-full mt-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-extrabold text-sm transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                            </svg>
+                            Додати в кошик
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bosch -->
+                <div class="bg-slate-900 border border-slate-800 hover:border-amber-500/30 rounded-2xl overflow-hidden flex flex-col transition group">
+                    <div class="h-2 bg-gradient-to-r from-amber-500 to-amber-400"></div>
+                    <div class="p-5 flex flex-col flex-1 gap-3">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <p class="text-xs text-slate-500 font-semibold uppercase tracking-widest">Bosch · Німеччина</p>
+                                <h3 class="font-extrabold text-slate-100 text-lg leading-snug mt-0.5">SuperPlus</h3>
+                                <span class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-400 border border-amber-400/20 font-semibold">🏆 Макс. ресурс</span>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <p class="text-2xl font-extrabold text-emerald-400">1 100</p>
+                                <p class="text-xs text-slate-500">грн / комплект</p>
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-slate-500 font-mono bg-slate-800/50 px-2.5 py-1 rounded-lg w-fit">BSH-0986487</div>
+
+                        <p class="text-sm text-slate-400 leading-relaxed flex-1">Bosch SuperPlus з оптимізованим фрикційним складом забезпечують максимальний ресурс у своєму класі — до 80 000 км. Тихий хід, мінімальне забруднення диска барабана.</p>
+
+                        <div class="flex items-center gap-1.5 text-xs text-slate-500 flex-wrap">
+                            <span class="px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Ford Focus</span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+                            <span class="text-xs text-emerald-400 font-semibold">В наявності</span>
+                        </div>
+
+                        <button @click="addToCart('Bosch SuperPlus', 'BSH-0986487', 1100)"
+                                class="w-full mt-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-extrabold text-sm transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                            </svg>
+                            Додати в кошик
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─── SECTION 3: Порада AI-механіка ─── -->
+        <section class="mb-14">
+            <h2 class="text-xl font-extrabold mb-1 text-slate-100">🤖 Порада AI-механіка</h2>
+            <p class="text-slate-500 text-sm mb-6">Коли міняти барабанні колодки — симптоми, які не варто ігнорувати</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+
+                <!-- Симптом 1 -->
+                <div class="flex items-start gap-4 p-5 bg-slate-900 border border-slate-800 rounded-2xl hover:border-red-500/30 transition">
+                    <div class="w-10 h-10 rounded-xl bg-red-400/10 border border-red-400/20 flex items-center justify-center text-xl shrink-0">🅿️</div>
+                    <div>
+                        <p class="font-bold text-slate-200">Слабке ручне гальмо</p>
+                        <p class="text-sm text-slate-400 mt-1 leading-relaxed">Авто не тримається на нахилі або ручник доводиться тягнути майже до кінця ходу — зношений фрикційний шар барабанної колодки більше не забезпечує потрібного зачіпу. Потрібна заміна.</p>
+                    </div>
+                </div>
+
+                <!-- Симптом 2 -->
+                <div class="flex items-start gap-4 p-5 bg-slate-900 border border-slate-800 rounded-2xl hover:border-red-500/30 transition">
+                    <div class="w-10 h-10 rounded-xl bg-orange-400/10 border border-orange-400/20 flex items-center justify-center text-xl shrink-0">🔊</div>
+                    <div>
+                        <p class="font-bold text-slate-200">Шурхіт або скрип ззаду</p>
+                        <p class="text-sm text-slate-400 mt-1 leading-relaxed">При гальмуванні чуєте характерний шурхіт або металевий скрип із задньої частини авто? Стертий фрикційний матеріал зачіпає внутрішню поверхню барабана — терміново перевірте колодки.</p>
+                    </div>
+                </div>
+
+                <!-- Симптом 3 -->
+                <div class="flex items-start gap-4 p-5 bg-slate-900 border border-slate-800 rounded-2xl hover:border-orange-500/30 transition">
+                    <div class="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-xl shrink-0">🌀</div>
+                    <div>
+                        <p class="font-bold text-slate-200">Занесення при гальмуванні</p>
+                        <p class="text-sm text-slate-400 mt-1 leading-relaxed">Авто тягне вбік при натисканні на гальмо — ознака нерівномірного зносу колодок з різних боків. Перевірте обидва задніх колеса одночасно та замінюйте колодки парою.</p>
+                    </div>
+                </div>
+
+                <!-- Симптом 4 -->
+                <div class="flex items-start gap-4 p-5 bg-slate-900 border border-slate-800 rounded-2xl hover:border-blue-500/30 transition">
+                    <div class="w-10 h-10 rounded-xl bg-blue-400/10 border border-blue-400/20 flex items-center justify-center text-xl shrink-0">📏</div>
+                    <div>
+                        <p class="font-bold text-slate-200">Збільшений гальмівний шлях</p>
+                        <p class="text-sm text-slate-400 mt-1 leading-relaxed">Авто гальмує значно довше, ніж зазвичай, особливо на задній осі. Зношені колодки не забезпечують потрібного гальмівного зусилля — це критично небезпечно на мокрій дорозі.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Рекомендація ресурсу -->
+            <div class="p-5 bg-gradient-to-r from-emerald-500/10 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-2xl flex flex-col sm:flex-row items-center gap-4">
+                <div class="text-4xl shrink-0">💡</div>
+                <div class="flex-1 text-center sm:text-left">
+                    <p class="font-extrabold text-slate-100 text-base">Рекомендований інтервал перевірки</p>
+                    <p class="text-slate-400 text-sm mt-1 leading-relaxed">
+                        Перевіряйте барабанні колодки кожні <strong class="text-emerald-400">20 000–25 000 км</strong> або щорічно. Замінюйте при товщині фрикційного шару менше <strong class="text-emerald-400">1,5 мм</strong>. Після заміни колодок обов'язково виконайте припрацювання: 5–7 плавних гальмувань зі 60 до 10 км/год.
+                    </p>
+                </div>
+            </div>
+
+            <!-- AI CTA -->
+            <div class="mt-5 flex flex-col sm:flex-row items-center gap-5 p-6 bg-gradient-to-r from-blue-500/10 to-slate-900 border border-blue-500/30 rounded-2xl">
+                <div class="text-4xl shrink-0">🤖</div>
+                <div class="flex-1 text-center sm:text-left">
+                    <p class="font-extrabold text-slate-100 text-lg">Не впевнені щодо вашого авто?</p>
+                    <p class="text-slate-400 text-sm mt-1">Поверніться на головну та запитайте AI-механіка. Просто напишіть: «барабанні колодки на [марка авто]» — і отримаєте підібрані варіанти зі складу.</p>
+                </div>
+                <a href="/" class="shrink-0 px-6 py-3 bg-blue-500 hover:bg-blue-400 text-white font-extrabold rounded-xl transition text-sm whitespace-nowrap">
+                    Запитати AI ↗
+                </a>
+            </div>
+        </section>
+
+        <!-- Back button -->
+        <div class="mt-4 flex flex-wrap justify-center gap-3">
+            <a href="/catalog/brake-pads"
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold rounded-xl transition text-sm">
+                🛑 Дискові колодки
+            </a>
+            <a href="/"
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-xl transition text-sm">
+                ← Назад на головну
+            </a>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-10 border-t border-slate-800 bg-slate-900/50">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <p class="font-bold text-sm mb-1">Auto<span class="text-amber-400">Parts</span> AI</p>
+                <p class="text-xs text-slate-500">Розумний підбір автозапчастин на основі штучного інтелекту Google Gemini.</p>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">Про проєкт</p>
+                <ul class="text-xs text-slate-500 space-y-1">
+                    <li><span class="text-slate-400">Автор проєкту:</span> Андрій Плекан</li>
+                    <li><span class="text-slate-400">Група:</span> 46п &nbsp;·&nbsp; <span class="text-slate-400">Коледж:</span> saceit</li>
+                    <li><span class="text-slate-400">Рік:</span> 2026</li>
+                </ul>
+            </div>
+            <div class="flex flex-wrap gap-1.5 content-start">
+                <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">FastAPI</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">SQLAlchemy</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Google Gemini</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Alpine.js</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Tailwind CSS</span>
+            </div>
+        </div>
+        <div class="border-t border-slate-800 py-3 text-center text-xs text-slate-600">
+            &copy; 2026 AutoParts AI. Автор проєкту: Андрій Плекан, група 46п, saceit.
+        </div>
+    </footer>
+
+    <script>
+        function cartPage() {
+            return {
+                cartOpen: false,
+                cartItems: JSON.parse(localStorage.getItem('autoparts_cart') || '[]'),
+                toast: false,
+                toastLeaving: false,
+                _toastTimer: null,
+
+                get cartTotal() {
+                    return this.cartItems.reduce((s, i) => s + i.price, 0);
+                },
+
+                addToCart(name, article, price) {
+                    this.cartItems.push({ name, article, price });
+                    localStorage.setItem('autoparts_cart', JSON.stringify(this.cartItems));
+                    this.showToast();
+                },
+
+                showToast() {
+                    clearTimeout(this._toastTimer);
+                    this.toastLeaving = false;
+                    this.toast = true;
+                    this._toastTimer = setTimeout(() => {
+                        this.toastLeaving = true;
+                        setTimeout(() => { this.toast = false; this.toastLeaving = false; }, 320);
+                    }, 2500);
+                },
+            };
+        }
+    </script>
+</body>
+</html>

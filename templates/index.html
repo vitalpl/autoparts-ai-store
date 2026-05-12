@@ -17,6 +17,24 @@
         body > footer ~ footer,
         body > script ~ script { display: none !important; }
     </style>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('auth', {
+                user: null,
+                loaded: false,
+                init() {
+                    fetch('/api/me')
+                        .then(r => r.ok ? r.json() : null)
+                        .then(data => { this.user = data; this.loaded = true; })
+                        .catch(() => { this.loaded = true; });
+                },
+                logout() {
+                    fetch('/api/logout', { method: 'POST' })
+                        .then(() => { this.user = null; window.location.reload(); });
+                }
+            });
+        });
+    </script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-full flex flex-col antialiased">
 
@@ -61,7 +79,7 @@
                                 <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 pb-1.5 border-b border-slate-800">Гальмівна система</p>
                                 <div class="space-y-0.5">
                                     <a href="/catalog/brake-pads" class="block px-2 py-1.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-amber-400 text-xs transition">Гальмівні колодки</a>
-                                    <a href="#" class="block px-2 py-1.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-amber-400 text-xs transition">Гальмівні колодки барабанні</a>
+                                    <a href="/catalog/drum-brake-pads" class="block px-2 py-1.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-amber-400 text-xs transition">Гальмівні колодки барабанні</a>
                                     <a href="#" class="block px-2 py-1.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-amber-400 text-xs transition">Гальмівна рідина</a>
                                     <a href="#" class="block px-2 py-1.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-amber-400 text-xs transition">Гальмівні диски</a>
                                     <a href="#" class="block px-2 py-1.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-amber-400 text-xs transition">Гальмівні барабани</a>
@@ -158,6 +176,33 @@
 
                 <a href="https://prg.exist.ua/zapasy-sale/?_gl=1*1hhp078*_gcl_au*NzE1NDQyNjkyLjE3NzgzMjk5MTU." target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Акції</a>
                 <a href="/contacts" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Контакти</a>
+
+                <!-- Auth divider -->
+                <span class="w-px h-4 bg-slate-700 mx-1 shrink-0"></span>
+
+                <!-- Not logged in -->
+                <div x-show="$store.auth.loaded && !$store.auth.user" class="flex items-center gap-1">
+                    <button @click="$dispatch('open-auth', 'login')"
+                            class="px-3 py-1.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-slate-100 transition text-sm">
+                        Увійти
+                    </button>
+                    <button @click="$dispatch('open-auth', 'register')"
+                            class="px-3 py-1.5 rounded-lg bg-amber-400 text-slate-950 hover:bg-amber-300 transition text-xs font-bold">
+                        Реєстрація
+                    </button>
+                </div>
+
+                <!-- Logged in -->
+                <div x-show="$store.auth.loaded && $store.auth.user" class="flex items-center gap-1">
+                    <a href="/profile"
+                       class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-amber-400 transition text-sm">
+                        Привіт, <span class="font-semibold" x-text="$store.auth.user?.name"></span>
+                    </a>
+                    <button @click="$store.auth.logout()"
+                            class="px-3 py-1.5 rounded-lg text-slate-500 hover:bg-slate-800 hover:text-red-400 transition text-xs">
+                        Вийти
+                    </button>
+                </div>
             </nav>
 
             <!-- Cart button -->
@@ -193,9 +238,20 @@
                         </div>
                     </template>
                     <template x-if="items.length > 0">
-                        <div class="mt-3 pt-3 border-t border-slate-700 flex justify-between items-center">
-                            <span class="text-sm text-slate-400">Разом:</span>
-                            <span class="font-bold text-amber-400" x-text="total + ' ₴'"></span>
+                        <div class="mt-3 pt-3 border-t border-slate-700">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-sm text-slate-400">Разом:</span>
+                                <span class="font-bold text-amber-400" x-text="total + ' ₴'"></span>
+                            </div>
+                            <button @click="checkout()"
+                                    :disabled="checkoutLoading"
+                                    class="w-full py-2 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-slate-950 font-bold rounded-xl text-sm transition">
+                                <span x-show="!checkoutLoading">✓ Оформити замовлення</span>
+                                <span x-show="checkoutLoading">Оформляється...</span>
+                            </button>
+                            <p x-show="checkoutMsg" x-cloak class="text-xs text-center mt-2"
+                               :class="checkoutOk ? 'text-emerald-400' : 'text-red-400'"
+                               x-text="checkoutMsg"></p>
                         </div>
                     </template>
                 </div>
@@ -631,6 +687,101 @@
             }));
         });
     </script>
+
+    <!-- ===== AUTH MODALS ===== -->
+    <div x-data="authModal()"
+         @open-auth.window="open($event.detail)"
+         x-cloak>
+        <div x-show="show"
+             class="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4"
+             @click.self="close()">
+            <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-extrabold">
+                        <span x-show="mode === 'login'">🔑 Вхід в кабінет</span>
+                        <span x-show="mode === 'register'">👤 Реєстрація</span>
+                    </h2>
+                    <button @click="close()" class="text-slate-500 hover:text-slate-200 transition">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div x-show="error" x-cloak
+                     class="mb-4 px-4 py-2.5 bg-red-400/10 border border-red-400/30 rounded-xl text-red-400 text-sm"
+                     x-text="error"></div>
+                <form @submit.prevent="submit()" class="space-y-4">
+                    <div x-show="mode === 'register'">
+                        <label class="block text-xs text-slate-500 mb-1">Ім'я</label>
+                        <input x-model="name" type="text" autocomplete="name"
+                               class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:border-amber-400 transition"
+                               placeholder="Ваше ім'я"/>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">Email</label>
+                        <input x-model="email" type="email" autocomplete="email" required
+                               class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:border-amber-400 transition"
+                               placeholder="your@email.com"/>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">Пароль</label>
+                        <input x-model="password" type="password" autocomplete="current-password" required
+                               class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:border-amber-400 transition"
+                               placeholder="••••••••"/>
+                    </div>
+                    <button type="submit" :disabled="loading"
+                            class="w-full py-3 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-slate-950 font-bold rounded-xl text-sm transition">
+                        <span x-show="!loading" x-text="mode === 'login' ? 'Увійти' : 'Зареєструватися'"></span>
+                        <span x-show="loading">Зачекайте...</span>
+                    </button>
+                </form>
+                <p class="text-center text-xs text-slate-500 mt-5">
+                    <span x-show="mode === 'login'">Немає акаунту?
+                        <button @click="mode = 'register'; error = ''" class="text-amber-400 hover:text-amber-300 font-semibold transition">Зареєструватися</button>
+                    </span>
+                    <span x-show="mode === 'register'">Вже є акаунт?
+                        <button @click="mode = 'login'; error = ''" class="text-amber-400 hover:text-amber-300 font-semibold transition">Увійти</button>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('authModal', () => ({
+                show: false,
+                mode: 'login',
+                name: '', email: '', password: '',
+                error: '', loading: false,
+                open(m) { this.mode = m || 'login'; this.show = true; this.error = ''; },
+                close() { this.show = false; },
+                async submit() {
+                    this.loading = true; this.error = '';
+                    const url = this.mode === 'login' ? '/api/login' : '/api/register';
+                    const body = this.mode === 'login'
+                        ? { email: this.email, password: this.password }
+                        : { email: this.email, name: this.name, password: this.password };
+                    try {
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(body),
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            Alpine.store('auth').user = data.user;
+                            this.close();
+                        } else {
+                            this.error = data.detail || 'Помилка авторизації';
+                        }
+                    } catch { this.error = 'Помилка з\'єднання'; }
+                    finally { this.loading = false; }
+                },
+            }));
+        });
+    </script>
+
 </body>
 </html>
 
@@ -861,11 +1012,39 @@
             Alpine.data('cartCounter', () => ({
                 open: false,
                 items: [],
+                checkoutLoading: false,
+                checkoutMsg: '',
+                checkoutOk: false,
                 get count() { return this.items.length; },
                 get total() {
                     return this.items.reduce((sum, i) => sum + Number(i.cina), 0).toFixed(2);
                 },
                 remove(idx) { this.items.splice(idx, 1); },
+                async checkout() {
+                    if (!this.items.length) return;
+                    this.checkoutLoading = true;
+                    this.checkoutMsg = '';
+                    try {
+                        const res = await fetch('/api/orders/create', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ items: this.items, total: parseFloat(this.total) }),
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            this.checkoutOk = true;
+                            this.checkoutMsg = '✓ Замовлення #' + data.order_id + ' оформлено!';
+                            this.items = [];
+                            setTimeout(() => { this.checkoutMsg = ''; this.open = false; }, 3000);
+                        } else {
+                            this.checkoutOk = false;
+                            this.checkoutMsg = data.detail === 'Не авторизований'
+                                ? 'Увійдіть для оформлення замовлення'
+                                : (data.detail || 'Помилка');
+                        }
+                    } catch { this.checkoutOk = false; this.checkoutMsg = 'Помилка з'єднання'; }
+                    finally { this.checkoutLoading = false; }
+                },
                 init() {
                     window.addEventListener('add-to-cart', (e) => {
                         this.items.push(e.detail);

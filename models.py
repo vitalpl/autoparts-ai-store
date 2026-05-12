@@ -23,6 +23,8 @@ class Korystuvach(Base):
     data_rejestraciyi: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+    # Модель авто для фішки "Мій Гараж" — підставляється в AI-пошук автоматично
+    model_avto: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
 
     # Один користувач — багато замовлень; при видаленні користувача видаляються й замовлення
     zamovlennya: Mapped[List["Zamovlennya"]] = relationship(
@@ -92,6 +94,8 @@ class Zamovlennya(Base):
     )
     zahalna_suma: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False, default=0)
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="Нове")
+    # JSON-знімок кошика на момент оформлення (список товарів)
+    items_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     korystuvach: Mapped["Korystuvach"] = relationship(back_populates="zamovlennya")
 
