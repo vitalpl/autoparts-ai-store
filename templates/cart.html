@@ -1,0 +1,107 @@
+<div x-show="isCartOpen" 
+     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40" 
+     @click="isCartOpen = false"
+     x-transition.opacity>
+</div>
+
+<div x-show="isCartOpen" 
+     class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-slate-950 flex flex-col shadow-2xl border-l border-slate-800"
+     x-transition:enter="transition ease-out duration-300 transform"
+     x-transition:enter-start="translate-x-full"
+     x-transition:enter-end="translate-x-0"
+     x-transition:leave="transition ease-in duration-300 transform"
+     x-transition:leave-start="translate-x-0"
+     x-transition:leave-end="translate-x-full">
+    
+    <div class="flex-shrink-0 p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900">
+        <h2 class="text-xl font-bold text-slate-200 flex items-center gap-2">
+            🛒 <span>Кошик</span>
+        </h2>
+        <button @click="isCartOpen = false; isCheckoutMode = false" class="text-slate-400 hover:text-red-400 transition-colors text-2xl">
+            &times;
+        </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+        
+        <template x-if="!isCheckoutMode">
+            <div class="space-y-4">
+                <template x-if="cart.length === 0">
+                    <p class="text-slate-500 text-center mt-10">Ваш кошик порожній 😔</p>
+                </template>
+                
+                <template x-for="(item, index) in cart" :key="index">
+                    <div class="flex justify-between items-center p-3 bg-slate-900 rounded-lg border border-slate-800">
+                        <div>
+                            <p class="text-slate-200 font-medium" x-text="item.name"></p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-emerald-400 font-bold" x-text="item.price + ' ₴'"></span>
+                            <button @click="cart.splice(index, 1)" class="text-red-400 hover:text-red-300">✖</button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template x-if="isCheckoutMode">
+            <div class="space-y-4">
+                <h3 class="text-lg text-emerald-400 font-bold mb-4">Оформлення замовлення</h3>
+                
+                <div>
+                    <label class="block text-slate-400 text-sm mb-1">Ім'я та Прізвище</label>
+                    <input type="text" x-model="formData.name" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+                </div>
+                
+                <div>
+                    <label class="block text-slate-400 text-sm mb-1">Номер телефону</label>
+                    <input type="tel" x-model="formData.phone" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+                </div>
+
+                <div>
+                    <label class="block text-slate-400 text-sm mb-1 mt-4">Спосіб доставки</label>
+                    <select x-model="formData.delivery" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+                        <option value="nova_poshta">Нова Пошта</option>
+                        <option value="meest">Meest Express</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-slate-400 text-sm mb-1">Спосіб оплати</label>
+                    <select x-model="formData.payment" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+                        <option value="cod">При отриманні</option>
+                        <option value="card">Онлайн картою (Заглушка)</option>
+                    </select>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <div class="flex-shrink-0 p-4 border-t border-slate-800 bg-slate-900">
+        <div class="flex justify-between items-center mb-4">
+            <span class="text-slate-400">Разом:</span>
+            <span class="text-emerald-400 font-bold text-2xl" x-text="cart.reduce((total, item) => total + parseInt(item.price), 0) + ' ₴'"></span>
+        </div>
+        
+        <template x-if="!isCheckoutMode">
+            <button @click="isCheckoutMode = true" 
+                    :disabled="cart.length === 0"
+                    class="w-full bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-xl transition-colors">
+                Перейти до оформлення
+            </button>
+        </template>
+
+        <template x-if="isCheckoutMode">
+            <div class="flex gap-3">
+                <button @click="isCheckoutMode = false" 
+                        class="w-1/3 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-colors">
+                    Назад
+                </button>
+                <button @click="alert('Замовлення успішно сформовано!'); cart = []; isCartOpen = false; isCheckoutMode = false;" 
+                        class="w-2/3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-colors">
+                    Підтвердити
+                </button>
+            </div>
+        </template>
+    </div>
+</div>

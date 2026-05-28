@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="uk" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Допомога ЗСУ — AutoParts AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        @keyframes flag-wave {
+            0%, 100% { transform: skewX(0deg) scaleX(1); }
+            25%       { transform: skewX(-2deg) scaleX(0.98); }
+            75%       { transform: skewX(2deg) scaleX(0.98); }
+        }
+        .flag-wave { animation: flag-wave 3s ease-in-out infinite; }
+        @keyframes shimmer {
+            0%   { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .shimmer-text {
+            background: linear-gradient(90deg, #fbbf24 0%, #fffbeb 40%, #fbbf24 60%, #d97706 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14%      { transform: scale(1.15); }
+            28%      { transform: scale(1); }
+            42%      { transform: scale(1.1); }
+            56%      { transform: scale(1); }
+        }
+        .heartbeat { animation: heartbeat 2s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-full flex flex-col antialiased">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur border-b border-slate-800">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+            <a href="/" class="flex items-center gap-2 shrink-0">
+                <svg class="w-7 h-7 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="8" cy="17" r="1.5" fill="currentColor"/>
+                    <circle cx="16" cy="17" r="1.5" fill="currentColor"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M1 17l2-9h18l2 9"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 8l1-4h12l1 4"/>
+                </svg>
+                <span class="text-lg font-extrabold tracking-tight">Auto<span class="text-amber-400">Parts</span> <span class="text-slate-400 font-light text-base">AI</span></span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1 text-sm text-slate-400">
+                <a href="/" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Головна</a>
+                <a href="/contacts" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Контакти</a>
+                <a href="/roadside-help" class="px-3 py-1.5 rounded-lg text-amber-400 hover:bg-amber-400/10 hover:text-amber-300 transition font-semibold">⚙️ Допомога на дорозі</a>
+            </nav>
+            <a href="/" class="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm transition">
+                ← Головна
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="relative overflow-hidden">
+        <!-- Background gradient — blue/yellow ukraine colors -->
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute inset-0 bg-gradient-to-b from-blue-950/60 via-slate-950 to-slate-950"></div>
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500"></div>
+            <div class="absolute top-2 left-0 right-0 h-2 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-400"></div>
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-blue-600/5 blur-3xl"></div>
+        </div>
+
+        <div class="relative max-w-screen-xl mx-auto px-4 sm:px-6 pt-20 pb-16 text-center">
+            <!-- Ukrainian flag emoji with animation -->
+            <div class="inline-block text-6xl mb-6 flag-wave">🇺🇦</div>
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-6 ml-0 block">
+                <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                Збройні Сили України — наш щит
+            </div>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6">
+                <span class="shimmer-text">Допомагаємо</span><br>
+                <span class="text-blue-400">ЗСУ</span> разом із вами
+            </h1>
+            <p class="text-slate-400 text-lg leading-relaxed max-w-2xl mx-auto mb-10">
+                AutoParts AI підтримує Збройні Сили України, їхніх рідних і волонтерів.
+                Ми виділяємо частину прибутку на потреби оборони та надаємо спеціальні умови для ветеранів і діючих військових.
+            </p>
+
+            <!-- Ukraine flag banner -->
+            <div class="inline-flex overflow-hidden rounded-2xl shadow-2xl shadow-blue-900/30 mb-4">
+                <div class="w-40 h-16 bg-blue-500"></div>
+                <div class="w-40 h-16 bg-yellow-400"></div>
+            </div>
+            <p class="text-xs text-slate-600 mt-1">Слава Україні! 🇺🇦</p>
+        </div>
+    </section>
+
+    <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pb-20">
+
+        <!-- Impact stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+            <div class="bg-gradient-to-b from-blue-900/20 to-slate-900 border border-blue-500/20 rounded-2xl p-5 text-center">
+                <p class="text-3xl font-extrabold text-blue-400 mb-1">₴850K+</p>
+                <p class="text-xs text-slate-400">перераховано<br>ЗСУ у 2025 р.</p>
+            </div>
+            <div class="bg-gradient-to-b from-yellow-900/10 to-slate-900 border border-yellow-500/20 rounded-2xl p-5 text-center">
+                <p class="text-3xl font-extrabold text-yellow-400 mb-1">340+</p>
+                <p class="text-xs text-slate-400">запчастин<br>для техніки ЗСУ</p>
+            </div>
+            <div class="bg-gradient-to-b from-emerald-900/10 to-slate-900 border border-emerald-500/20 rounded-2xl p-5 text-center">
+                <p class="text-3xl font-extrabold text-emerald-400 mb-1">-20%</p>
+                <p class="text-xs text-slate-400">знижка<br>для ветеранів</p>
+            </div>
+            <div class="bg-gradient-to-b from-rose-900/10 to-slate-900 border border-rose-500/20 rounded-2xl p-5 text-center">
+                <p class="text-3xl font-extrabold text-rose-400 mb-1 heartbeat">❤️</p>
+                <p class="text-xs text-slate-400">волонтери<br>на зв'язку</p>
+            </div>
+        </div>
+
+        <!-- How we help -->
+        <section class="mb-16">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-100 mb-2">Як ми допомагаємо ЗСУ</h2>
+                <p class="text-slate-500 text-sm max-w-xl mx-auto">Кожне ваше замовлення — внесок у перемогу. Ось що ми робимо конкретно.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-blue-500/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-blue-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-blue-400/10 border border-blue-400/20 flex items-center justify-center text-2xl group-hover:border-blue-400/40 transition">🔩</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Запчастини для техніки ЗСУ</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Поставляємо запчастини для військової та цивільної техніки, що перебуває на службі у ЗСУ, за собівартістю або безкоштовно.</p>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-slate-800">
+                        <span class="inline-block text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-semibold">Безкоштовно або собівартість</span>
+                    </div>
+                </div>
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-yellow-500/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-yellow-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center text-2xl group-hover:border-yellow-400/40 transition">💰</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">5% від кожного продажу</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">П'ять відсотків від кожного замовлення автоматично перераховуються до фондів підтримки ЗСУ «Повернись живим» та «Армія SOS».</p>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-slate-800">
+                        <span class="inline-block text-xs px-3 py-1 rounded-full bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 font-semibold">Автоматичний внесок</span>
+                    </div>
+                </div>
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-emerald-500/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-emerald-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-2xl group-hover:border-emerald-400/40 transition">🎖️</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Знижка 20% для ветеранів</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Ветерани та чинні військовослужбовці ЗСУ отримують постійну знижку 20% на весь асортимент. Просто покажіть посвідчення.</p>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-slate-800">
+                        <span class="inline-block text-xs px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">Постійна пільга</span>
+                    </div>
+                </div>
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-rose-500/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-rose-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-rose-400/10 border border-rose-400/20 flex items-center justify-center text-2xl group-hover:border-rose-400/40 transition">🏥</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Техніка для медиків</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Підтримуємо медичні підрозділи — постачаємо запчастини для санітарних автомобілів, квадроциклів та інших машин.</p>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-slate-800">
+                        <span class="inline-block text-xs px-3 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 font-semibold">Медичні підрозділи</span>
+                    </div>
+                </div>
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-purple-500/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-purple-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-purple-400/10 border border-purple-400/20 flex items-center justify-center text-2xl group-hover:border-purple-400/40 transition">📦</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Волонтерська доставка</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Спільно з волонтерськими організаціями організовуємо доставку необхідних матеріалів до місць дислокації без жодної плати.</p>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-slate-800">
+                        <span class="inline-block text-xs px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 font-semibold">Безкоштовна доставка</span>
+                    </div>
+                </div>
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-orange-500/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-orange-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-orange-400/10 border border-orange-400/20 flex items-center justify-center text-2xl group-hover:border-orange-400/40 transition">🛠️</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Технічні консультації</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Наші механіки надають безкоштовні технічні консультації для ЗСУ — підбір запчастин, ремонтні схеми, налагодження техніки.</p>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-slate-800">
+                        <span class="inline-block text-xs px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 font-semibold">Безкоштовно</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Partners / Funds -->
+        <section class="mb-16">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-extrabold text-slate-100 mb-2">Наші партнери-фонди</h2>
+                <p class="text-slate-500 text-sm">Ми співпрацюємо лише з перевіреними та прозорими організаціями</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+                <a href="https://savelife.in.ua" target="_blank" rel="noopener noreferrer"
+                   class="group flex flex-col items-center text-center gap-4 p-6 bg-slate-900 border border-slate-800 hover:border-blue-500/40 rounded-2xl transition-all hover:shadow-lg hover:shadow-blue-500/10">
+                    <div class="w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-600/30 flex items-center justify-center text-3xl group-hover:border-blue-500/50 transition">🛡️</div>
+                    <div>
+                        <p class="font-extrabold text-slate-100 text-base mb-1">Повернись живим</p>
+                        <p class="text-sm text-slate-400">Найбільший волонтерський фонд України — забезпечує армію технікою, засобами зв'язку та захисту.</p>
+                    </div>
+                    <span class="text-xs text-blue-400 group-hover:text-blue-300 transition">savelife.in.ua ↗</span>
+                </a>
+
+                <a href="https://armysos.com.ua" target="_blank" rel="noopener noreferrer"
+                   class="group flex flex-col items-center text-center gap-4 p-6 bg-slate-900 border border-slate-800 hover:border-yellow-500/40 rounded-2xl transition-all hover:shadow-lg hover:shadow-yellow-500/10">
+                    <div class="w-16 h-16 rounded-2xl bg-yellow-400/15 border border-yellow-400/20 flex items-center justify-center text-3xl group-hover:border-yellow-400/40 transition">⚔️</div>
+                    <div>
+                        <p class="font-extrabold text-slate-100 text-base mb-1">Армія SOS</p>
+                        <p class="text-sm text-slate-400">Допомагає солдатам на лінії фронту — дрони, амуніція, тактичне спорядження та медикаменти.</p>
+                    </div>
+                    <span class="text-xs text-yellow-400 group-hover:text-yellow-300 transition">armysos.com.ua ↗</span>
+                </a>
+
+                <a href="https://uafund.org" target="_blank" rel="noopener noreferrer"
+                   class="group flex flex-col items-center text-center gap-4 p-6 bg-slate-900 border border-slate-800 hover:border-emerald-500/40 rounded-2xl transition-all hover:shadow-lg hover:shadow-emerald-500/10">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-3xl group-hover:border-emerald-400/40 transition">🇺🇦</div>
+                    <div>
+                        <p class="font-extrabold text-slate-100 text-base mb-1">United24</p>
+                        <p class="text-sm text-slate-400">Офіційна платформа Президента України для збору коштів на оборону, медицину та відновлення.</p>
+                    </div>
+                    <span class="text-xs text-emerald-400 group-hover:text-emerald-300 transition">u24.gov.ua ↗</span>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Veteran discount section -->
+        <section class="mb-16">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-900/30 via-slate-900 to-yellow-900/10 border border-blue-500/20 p-8 sm:p-12">
+                <div class="absolute top-0 right-0 text-[200px] leading-none opacity-5 select-none pointer-events-none">🇺🇦</div>
+                <div class="relative flex flex-col lg:flex-row items-center gap-8">
+                    <div class="text-center lg:text-left flex-1">
+                        <div class="inline-block text-4xl mb-3">🎖️</div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-100 mb-3">
+                            Знижка <span class="text-yellow-400">-20%</span> для захисників
+                        </h2>
+                        <p class="text-slate-400 text-sm leading-relaxed max-w-lg">
+                            Якщо ви чинний військовослужбовець ЗСУ, ветеран або маєте посвідчення учасника бойових дій (УБД) —
+                            отримайте постійну знижку <strong class="text-yellow-400">20%</strong> на весь асортимент магазину.
+                            Просто зверніться до нас для верифікації.
+                        </p>
+                        <div class="mt-6 flex flex-wrap gap-3 justify-center lg:justify-start">
+                            <a href="/contacts"
+                               class="flex items-center gap-2 px-6 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-bold text-sm transition">
+                                Отримати знижку →
+                            </a>
+                            <a href="/"
+                               class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold text-sm transition">
+                                До каталогу
+                            </a>
+                        </div>
+                    </div>
+                    <div class="shrink-0">
+                        <div class="w-40 h-40 rounded-3xl bg-gradient-to-br from-blue-500/20 to-yellow-400/20 border border-blue-500/20 flex items-center justify-center">
+                            <span class="text-7xl">🇺🇦</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Donate section -->
+        <section class="mb-16">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-extrabold text-slate-100 mb-2">Підтримати разом із нами</h2>
+                <p class="text-slate-500 text-sm">Кожна гривня наближає перемогу — прямі посилання для донатів</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                <a href="https://savelife.in.ua/donate/" target="_blank" rel="noopener noreferrer"
+                   class="group flex items-center gap-5 p-5 bg-slate-900 border border-slate-800 hover:border-blue-500/40 rounded-2xl transition-all hover:shadow-lg hover:shadow-blue-500/10">
+                    <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">🛡️</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-bold text-slate-100 text-sm">Повернись живим</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Задонатити на техніку та амуніцію для бійців</p>
+                    </div>
+                    <svg class="w-5 h-5 text-slate-600 group-hover:text-blue-400 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                    </svg>
+                </a>
+
+                <a href="https://u24.gov.ua/uk/donate" target="_blank" rel="noopener noreferrer"
+                   class="group flex items-center gap-5 p-5 bg-slate-900 border border-slate-800 hover:border-yellow-500/40 rounded-2xl transition-all hover:shadow-lg hover:shadow-yellow-500/10">
+                    <div class="w-12 h-12 rounded-xl bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">🇺🇦</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-bold text-slate-100 text-sm">United24 (офіційно)</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Офіційна державна платформа донатів на ЗСУ</p>
+                    </div>
+                    <svg class="w-5 h-5 text-slate-600 group-hover:text-yellow-400 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                    </svg>
+                </a>
+
+                <a href="https://armysos.com.ua/donate/" target="_blank" rel="noopener noreferrer"
+                   class="group flex items-center gap-5 p-5 bg-slate-900 border border-slate-800 hover:border-emerald-500/40 rounded-2xl transition-all hover:shadow-lg hover:shadow-emerald-500/10">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">⚔️</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-bold text-slate-100 text-sm">Армія SOS</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Збір на дрони, зв'язок та тактичне спорядження</p>
+                    </div>
+                    <svg class="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                    </svg>
+                </a>
+
+                <a href="https://www.nbu.gov.ua/en/news/nbu-opened-a-special-fundraising-account-to-support-the-armed-forces-of-ukraine/" target="_blank" rel="noopener noreferrer"
+                   class="group flex items-center gap-5 p-5 bg-slate-900 border border-slate-800 hover:border-slate-600 rounded-2xl transition-all hover:shadow-lg">
+                    <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">🏦</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-bold text-slate-100 text-sm">НБУ — Рахунок для ЗСУ</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Спеціальний рахунок Нацбанку для підтримки армії</p>
+                    </div>
+                    <svg class="w-5 h-5 text-slate-600 group-hover:text-slate-300 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Closing call to action -->
+        <div class="relative overflow-hidden rounded-3xl text-center p-12">
+            <!-- Ukrainian flag background -->
+            <div class="absolute inset-0 rounded-3xl overflow-hidden">
+                <div class="absolute inset-0 top-0 h-1/2 bg-blue-600/20"></div>
+                <div class="absolute inset-0 top-1/2 h-1/2 bg-yellow-400/15"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/80"></div>
+            </div>
+            <div class="relative">
+                <p class="text-5xl mb-4">🇺🇦</p>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-100 mb-3">Разом до перемоги!</h2>
+                <p class="text-slate-400 max-w-lg mx-auto mb-8 text-sm leading-relaxed">
+                    Ми пишаємось тим, що кожен наш клієнт стає частиною підтримки захисників України.
+                    Купуйте запчастини — разом змінюємо хід історії.
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="/"
+                       class="flex items-center gap-2 px-8 py-4 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-base transition">
+                        Замовити запчастини
+                    </a>
+                    <a href="/contacts"
+                       class="flex items-center gap-2 px-8 py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold text-base transition">
+                        Зв'язатись з нами
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-10 border-t border-slate-800 bg-slate-900/50">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <svg class="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="8" cy="17" r="1.5" fill="currentColor"/>
+                    <circle cx="16" cy="17" r="1.5" fill="currentColor"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M1 17l2-9h18l2 9"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 8l1-4h12l1 4"/>
+                </svg>
+                <span class="font-bold text-sm">Auto<span class="text-amber-400">Parts</span> AI</span>
+            </div>
+            <p class="text-xs text-blue-400 font-semibold">🇺🇦 Слава Україні! Героям слава!</p>
+            <div class="flex items-center gap-4 text-xs text-slate-500">
+                <a href="/delivery" class="hover:text-slate-300 transition">Доставка</a>
+                <a href="/contacts" class="hover:text-slate-300 transition">Контакти</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

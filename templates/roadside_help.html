@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="uk" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Технічна допомога на дорозі — AutoParts AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0); }
+            50%       { box-shadow: 0 0 0 8px rgba(251,191,36,0.12); }
+        }
+        .glow-pulse { animation: pulse-glow 2.5s ease-in-out infinite; }
+        @keyframes spin-slow { to { transform: rotate(360deg); } }
+        .spin-slow { animation: spin-slow 12s linear infinite; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-full flex flex-col antialiased">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur border-b border-slate-800">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+            <a href="/" class="flex items-center gap-2 shrink-0">
+                <svg class="w-7 h-7 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="8" cy="17" r="1.5" fill="currentColor"/>
+                    <circle cx="16" cy="17" r="1.5" fill="currentColor"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M1 17l2-9h18l2 9"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 8l1-4h12l1 4"/>
+                </svg>
+                <span class="text-lg font-extrabold tracking-tight">Auto<span class="text-amber-400">Parts</span> <span class="text-slate-400 font-light text-base">AI</span></span>
+            </a>
+            <nav class="hidden md:flex items-center gap-1 text-sm text-slate-400">
+                <a href="/" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Головна</a>
+                <a href="/delivery" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Доставка</a>
+                <a href="/contacts" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition">Контакти</a>
+                <a href="/zsu-help" class="px-3 py-1.5 rounded-lg text-blue-400 hover:bg-blue-400/10 hover:text-blue-300 transition font-semibold">🇺🇦 Допомога ЗСУ</a>
+            </nav>
+            <a href="/" class="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm transition">
+                ← Головна
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="relative overflow-hidden">
+        <!-- Background gradient -->
+        <div class="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-slate-950 to-slate-950 pointer-events-none"></div>
+        <!-- Decorative circle -->
+        <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-amber-400/5 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-orange-500/5 blur-3xl pointer-events-none"></div>
+
+        <div class="relative max-w-screen-xl mx-auto px-4 sm:px-6 py-20 flex flex-col lg:flex-row items-center gap-12">
+            <!-- Text -->
+            <div class="flex-1 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs font-semibold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                    Цілодобово · 7 днів на тиждень
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6">
+                    Технічна<br>
+                    <span class="text-amber-400">допомога</span><br>
+                    на дорозі
+                </h1>
+                <p class="text-slate-400 text-lg leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
+                    Зламалось авто посеред траси? Не панікуйте — наша команда механіків і AI-помічник
+                    допоможуть вирішити будь-яку ситуацію швидко та ефективно.
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+                    <a href="tel:+380800300911"
+                       class="glow-pulse flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-base transition-all active:scale-95">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+                        </svg>
+                        0 800 300 911
+                    </a>
+                    <a href="/"
+                       class="flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white font-bold text-base transition-all">
+                        🤖 Запитати AI-механіка
+                    </a>
+                </div>
+            </div>
+
+            <!-- Animated icon -->
+            <div class="shrink-0 relative">
+                <div class="w-52 h-52 rounded-full bg-amber-400/5 border border-amber-400/10 flex items-center justify-center relative">
+                    <div class="absolute inset-0 rounded-full border border-amber-400/10 spin-slow"></div>
+                    <div class="absolute inset-4 rounded-full border border-dashed border-amber-400/10 spin-slow" style="animation-direction:reverse;animation-duration:18s"></div>
+                    <div class="w-28 h-28 rounded-full bg-amber-400/15 border border-amber-400/30 flex items-center justify-center">
+                        <span class="text-6xl">🚗</span>
+                    </div>
+                </div>
+                <!-- Floating badges -->
+                <div class="absolute -top-4 -right-4 px-3 py-2 bg-emerald-500/20 border border-emerald-500/30 rounded-xl text-xs font-bold text-emerald-400">⚡ 24/7</div>
+                <div class="absolute -bottom-4 -left-4 px-3 py-2 bg-amber-400/15 border border-amber-400/20 rounded-xl text-xs font-bold text-amber-400">🛠️ Виїзд</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN -->
+    <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pb-20">
+
+        <!-- Stats row -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16 -mt-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-center">
+                <p class="text-3xl font-extrabold text-amber-400 mb-1">15</p>
+                <p class="text-xs text-slate-400">хвилин<br>середній виїзд</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-center">
+                <p class="text-3xl font-extrabold text-amber-400 mb-1">24/7</p>
+                <p class="text-xs text-slate-400">цілодобова<br>підтримка</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-center">
+                <p class="text-3xl font-extrabold text-amber-400 mb-1">2 400+</p>
+                <p class="text-xs text-slate-400">успішних<br>виїздів 2025</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-center">
+                <p class="text-3xl font-extrabold text-amber-400 mb-1">4.9 ★</p>
+                <p class="text-xs text-slate-400">рейтинг<br>клієнтів</p>
+            </div>
+        </div>
+
+        <!-- Services section -->
+        <section class="mb-16">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-100 mb-2">Що ми робимо на місці</h2>
+                <p class="text-slate-500 text-sm">Кваліфіковані механіки з повним набором інструментів та запчастин</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-amber-400/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-amber-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-2xl group-hover:border-amber-400/40 transition">🔋</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Запуск двигуна</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Сів акумулятор? Запустимо від бустера, перевіримо генератор та стартер. При необхідності — замінимо АКБ на місці.</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">від</span>
+                        <span class="text-emerald-400 font-extrabold">350 ₴</span>
+                    </div>
+                </div>
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-amber-400/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-amber-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-blue-400/10 border border-blue-400/20 flex items-center justify-center text-2xl group-hover:border-blue-400/40 transition">🔧</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Заміна колеса</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Проколотий протектор або розрив? Встановимо запаску або відвеземо колесо у шиномонтаж. Швидко, без забруднення рук.</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">від</span>
+                        <span class="text-emerald-400 font-extrabold">200 ₴</span>
+                    </div>
+                </div>
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-amber-400/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-amber-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-red-400/10 border border-red-400/20 flex items-center justify-center text-2xl group-hover:border-red-400/40 transition">⛽</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Підвіз пального</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Закінчилось пальне в баку? Доставимо бензин А-95, А-95+ або дизель у каністрі прямо до автомобіля.</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">від</span>
+                        <span class="text-emerald-400 font-extrabold">150 ₴ + пальне</span>
+                    </div>
+                </div>
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-amber-400/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-amber-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-purple-400/10 border border-purple-400/20 flex items-center justify-center text-2xl group-hover:border-purple-400/40 transition">🔍</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Діагностика на місці</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Комп'ютерна діагностика OBD-II прямо на дорозі. Визначимо код помилки та причину несправності за 5 хвилин.</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">від</span>
+                        <span class="text-emerald-400 font-extrabold">400 ₴</span>
+                    </div>
+                </div>
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-amber-400/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-amber-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-2xl group-hover:border-emerald-400/40 transition">🚘</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Евакуатор</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Якщо ремонт неможливий на місці — евакуюємо авто до найближчого СТО або за вказаною адресою.</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">від</span>
+                        <span class="text-emerald-400 font-extrabold">800 ₴</span>
+                    </div>
+                </div>
+
+                <div class="group bg-slate-900 border border-slate-800 hover:border-amber-400/30 rounded-2xl p-6 flex flex-col gap-4 transition-all hover:shadow-lg hover:shadow-amber-500/5">
+                    <div class="w-12 h-12 rounded-xl bg-orange-400/10 border border-orange-400/20 flex items-center justify-center text-2xl group-hover:border-orange-400/40 transition">🧰</div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 text-base mb-1">Дрібний ремонт</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">Перегрілось авто, потрапила вода, обірвався ремінь? Маємо базовий запас витратних матеріалів та запчастин у фургоні.</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">від</span>
+                        <span class="text-emerald-400 font-extrabold">500 ₴</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- How it works -->
+        <section class="mb-16">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-100 mb-2">Як це працює</h2>
+                <p class="text-slate-500 text-sm">Три прості кроки — і ви знову на дорозі</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+                <!-- Connector line -->
+                <div class="hidden md:block absolute top-10 left-[calc(16.66%+1rem)] right-[calc(16.66%+1rem)] h-px bg-gradient-to-r from-amber-400/0 via-amber-400/30 to-amber-400/0"></div>
+
+                <div class="flex flex-col items-center text-center gap-4">
+                    <div class="relative w-20 h-20 rounded-2xl bg-amber-400/15 border-2 border-amber-400/30 flex items-center justify-center">
+                        <span class="text-3xl">📞</span>
+                        <span class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-amber-400 text-slate-950 font-extrabold text-sm flex items-center justify-center">1</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 mb-1">Зателефонуйте</h3>
+                        <p class="text-sm text-slate-400">Дзвоніть на гарячу лінію <span class="text-amber-400 font-semibold">0 800 300 911</span> або напишіть у чат — безкоштовно цілодобово.</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center text-center gap-4">
+                    <div class="relative w-20 h-20 rounded-2xl bg-blue-400/15 border-2 border-blue-400/30 flex items-center justify-center">
+                        <span class="text-3xl">📍</span>
+                        <span class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-amber-400 text-slate-950 font-extrabold text-sm flex items-center justify-center">2</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 mb-1">Вкажіть місце</h3>
+                        <p class="text-sm text-slate-400">Повідомте точне місцезнаходження або геолокацію. Диспетчер знайде найближчого майстра та назве час прибуття.</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center text-center gap-4">
+                    <div class="relative w-20 h-20 rounded-2xl bg-emerald-400/15 border-2 border-emerald-400/30 flex items-center justify-center">
+                        <span class="text-3xl">✅</span>
+                        <span class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-amber-400 text-slate-950 font-extrabold text-sm flex items-center justify-center">3</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-100 mb-1">Отримайте допомогу</h3>
+                        <p class="text-sm text-slate-400">Майстер приїде зі всім необхідним. Вирішимо проблему на місці або організуємо евакуацію.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Emergency tips -->
+        <section class="mb-16">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-100 mb-2">⚠️ Що робити до приїзду майстра</h2>
+                <p class="text-slate-500 text-sm">Порада від AI-механіка: дотримуйтесь цих правил безпеки</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex items-start gap-4 p-5 bg-slate-900 border border-slate-800 hover:border-amber-400/20 rounded-2xl transition group">
+                    <div class="w-11 h-11 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-xl shrink-0 group-hover:border-amber-400/40 transition">🚨</div>
+                    <div>
+                        <p class="font-bold text-slate-200 mb-1">Увімкніть аварійку</p>
+                        <p class="text-sm text-slate-400">Відразу після зупинки увімкніть аварійну сигналізацію — це обов'язково за ПДР і попередить інших водіїв.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 p-5 bg-slate-900 border border-slate-800 hover:border-amber-400/20 rounded-2xl transition group">
+                    <div class="w-11 h-11 rounded-xl bg-red-400/10 border border-red-400/20 flex items-center justify-center text-xl shrink-0 group-hover:border-red-400/40 transition">🔺</div>
+                    <div>
+                        <p class="font-bold text-slate-200 mb-1">Виставте знак аварійної зупинки</p>
+                        <p class="text-sm text-slate-400">На автостраді — мінімум 100 м позаду, у населеному пункті — 20–30 м. Убезпечте себе та інших.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 p-5 bg-slate-900 border border-slate-800 hover:border-amber-400/20 rounded-2xl transition group">
+                    <div class="w-11 h-11 rounded-xl bg-blue-400/10 border border-blue-400/20 flex items-center justify-center text-xl shrink-0 group-hover:border-blue-400/40 transition">🛤️</div>
+                    <div>
+                        <p class="font-bold text-slate-200 mb-1">З'їдьте на узбіччя</p>
+                        <p class="text-sm text-slate-400">Якщо можливо — відтягніть або відкотіть авто якомога далі від проїжджої частини.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 p-5 bg-slate-900 border border-slate-800 hover:border-amber-400/20 rounded-2xl transition group">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-xl shrink-0 group-hover:border-emerald-400/40 transition">👤</div>
+                    <div>
+                        <p class="font-bold text-slate-200 mb-1">Вийдіть та відійдіть від авто</p>
+                        <p class="text-sm text-slate-400">Особливо при запаху гару або диму — відійдіть на безпечну відстань від авто за відбійник.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA block -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500/20 via-amber-500/5 to-slate-900 border border-amber-400/20 p-10 text-center">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/50 to-transparent pointer-events-none"></div>
+            <div class="relative">
+                <p class="text-5xl mb-4">🛠️</p>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-100 mb-3">Потрібна термінова допомога?</h2>
+                <p class="text-slate-400 mb-6 max-w-md mx-auto">Не чекайте — дзвоніть прямо зараз. Або опишіть проблему нашому AI-механіку і отримайте консультацію миттєво.</p>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="tel:+380800300911"
+                       class="flex items-center gap-2 px-8 py-4 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-lg transition-all active:scale-95">
+                        📞 0 800 300 911
+                    </a>
+                    <a href="/"
+                       class="flex items-center gap-2 px-8 py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold text-base transition-all">
+                        🤖 AI-Механік
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-10 border-t border-slate-800 bg-slate-900/50">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <svg class="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="8" cy="17" r="1.5" fill="currentColor"/>
+                    <circle cx="16" cy="17" r="1.5" fill="currentColor"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M1 17l2-9h18l2 9"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 8l1-4h12l1 4"/>
+                </svg>
+                <span class="font-bold text-sm">Auto<span class="text-amber-400">Parts</span> AI</span>
+            </div>
+            <p class="text-xs text-slate-600">© 2026 AutoParts AI. Усі права захищено.</p>
+            <div class="flex items-center gap-4 text-xs text-slate-500">
+                <a href="/delivery" class="hover:text-slate-300 transition">Доставка</a>
+                <a href="/payment" class="hover:text-slate-300 transition">Оплата</a>
+                <a href="/contacts" class="hover:text-slate-300 transition">Контакти</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

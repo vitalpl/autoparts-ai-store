@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
 
-from sqlalchemy import DateTime, ForeignKey, Numeric, String, Text, func
+from sqlalchemy import Boolean, DateTime, ForeignKey, Numeric, String, Text, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -25,6 +25,8 @@ class Korystuvach(Base):
     )
     # Модель авто для фішки "Мій Гараж" — підставляється в AI-пошук автоматично
     model_avto: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    # Прапорець адміністратора — True лише для облікових записів з правами адміна
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     # Один користувач — багато замовлень; при видаленні користувача видаляються й замовлення
     zamovlennya: Mapped[List["Zamovlennya"]] = relationship(
