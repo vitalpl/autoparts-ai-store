@@ -105,13 +105,14 @@ async def admin_create_product(request: Request, db: Session = Depends(get_db)):
         print(f"DEBUG: Отримані дані з фронтенду: {data}")
         
         prod = Avtozapchastyna(
-            nazva=data.get("nazva"),
-            brend=data.get("brend"),
-            artikul=data.get("artikul"),
-            cina=float(data.get("cina", 0)),
-            kilkist_sklad=int(data.get("kilkist_sklad", 0)),
-            katehoriya_id=data.get("katehoriya_id") # Може бути None
-        )
+    nazva=data.get("nazva"),
+    brend=data.get("brend"),
+    artikul=data.get("artikul"),
+    cina=float(data.get("cina", 0)),
+    kilkist_sklad=int(data.get("kilkist_sklad", 0)),
+    # Якщо прийшов пустий рядок або None, перетворимо на None
+    katehoriya_id=int(data["katehoriya_id"]) if data.get("katehoriya_id") and data["katehoriya_id"] != "" else None
+)
         db.add(prod)
         db.commit()
         return {"status": "ok"}
