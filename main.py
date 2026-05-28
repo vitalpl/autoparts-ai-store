@@ -115,3 +115,26 @@ async def chat(payload: ChatRequest, db: Session = Depends(get_db)):
 @app.post("/api/orders/create")
 def create_order(payload: OrderCreateRequest, db: Session = Depends(get_db)):
     return {"status": "success", "order_id": f"AP-{random.randint(1000,9999)}"}
+
+    # ─── ДОДАТКОВІ МАРШРУТИ (ДОДАЙ ЇХ В КІНЕЦЬ main.py) ──────────────────────────
+
+@app.get("/api/me")
+def me(current_user: Korystuvach = Depends(lambda access_token=Cookie(None), db=Depends(get_db): get_current_user(access_token, db))):
+    return {"id": current_user.id, "name": current_user.imya, "is_admin": current_user.is_admin}
+
+@app.get("/admin")
+def admin_page(request: Request, access_token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
+    user_id = _decode_token(access_token) if access_token else None
+    user = db.get(Korystuvach, user_id) if user_id else None
+    if not user or not user.is_admin:
+        return RedirectResponse(url="/", status_code=302)
+    return templates.TemplateResponse(request=request, name="admin.html", context={
+        "admin_user": user, 
+        "products": db.execute(select(Avtozapchastyna)).scalars().all(), 
+        "categories": db.execute(select(Katehoriya)).scalars().all()
+    })
+
+@app.get("/api/admin/products")
+def admin_list_products(db: Session = Depends(get_db)):
+    rows = db.execute(select(Avtozapchastyna)).scalars().all()
+    return [{"id": p.id, "nazva": p.nazva, "brend": p.brend, "cina": float(p.cina), "artikul": p.artikul} for p in rows]
