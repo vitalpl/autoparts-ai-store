@@ -99,9 +99,25 @@ def login(payload: LoginRequest, response: Response, db: Session = Depends(get_d
     return {"user": {"id": user.id, "name": user.imya, "is_admin": user.is_admin}}
 
 @app.post("/api/admin/products")
-def admin_create_product(payload: ProductCreateRequest, db: Session = Depends(get_db)):
-    prod = Avtozapchastyna(nazva=payload.nazva, brend=payload.brend, artikul=payload.artikul, cina=payload.cina, kilkist_sklad=payload.kilkist_sklad, katehoriya_id=payload.katehoriya_id)
-    db.add(prod); db.commit(); return {"ok": True}
+async def admin_create_product(request: Request, db: Session = Depends(get_db)):
+    try:
+        data = await request.json()
+        print(f"DEBUG: Отримані дані з фронтенду: {data}")
+        
+        prod = Avtozapchastyna(
+            nazva=data.get("nazva"),
+            brend=data.get("brend"),
+            artikul=data.get("artikul"),
+            cina=float(data.get("cina", 0)),
+            kilkist_sklad=int(data.get("kilkist_sklad", 0)),
+            katehoriya_id=data.get("katehoriya_id") # Може бути None
+        )
+        db.add(prod)
+        db.commit()
+        return {"status": "ok"}
+    except Exception as e:
+        print(f"ERROR: {str(e)}") # Це виведе реальну причину в логи Render
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/admin")
 def admin_page(request: Request, access_token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
@@ -109,3 +125,7 @@ def admin_page(request: Request, access_token: Optional[str] = Cookie(None), db:
     user = db.get(Korystuvach, user_id) if user_id else None
     if not user or not user.is_admin: return RedirectResponse(url="/")
     return templates.TemplateResponse(request=request, name="admin.html", context={"admin_user": user, "products": db.execute(select(Avtozapchastyna)).scalars().all(), "categories": db.execute(select(Katehoriya)).scalars().all()})
+
+@app.get("/{full_path:path}")
+def catch_all(request: Request):
+    return templates.TemplateResponse(request=request, name="index.html")
