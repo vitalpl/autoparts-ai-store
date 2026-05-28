@@ -26,7 +26,6 @@ from models import Avtozapchastyna, Katehoriya, Korystuvach, Zamovlennya
 SECRET_KEY = os.environ.get("SECRET_KEY", "autoparts-dev-secret-key-2026")
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_DAYS = 7
-# Заміни старий CryptContext на цей:
 pwd_context = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
 
 def _create_token(user_id: int) -> str:
@@ -43,19 +42,12 @@ def init_admin():
     db = SessionLocal()
     admin_email = "admin@autoparts.com"
     if not db.query(Korystuvach).filter(Korystuvach.email == admin_email).first():
-        # Тепер це 100% не викличе ValueError
         hashed = pwd_context.hash("admin123")
-        admin = Korystuvach(
-            email=admin_email, 
-            imya="Адміністратор", 
-            parol_hash=hashed, 
-            is_admin=True
-        )
-        db.add(admin)
-        db.commit()
+        admin = Korystuvach(email=admin_email, imya="Адміністратор", parol_hash=hashed, is_admin=True)
+        db.add(admin); db.commit()
     db.close()
 
-# ─── Lifespan (ініціалізація при старті) ──────────────────────────────────
+# ─── Lifespan ───────────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
@@ -63,7 +55,7 @@ async def lifespan(app: FastAPI):
         init_admin()
         yield
     except Exception as e:
-        print(f"CRITICAL ERROR DURING STARTUP: {e}")
+        print(f"CRITICAL ERROR: {e}")
         raise e
 
 app = FastAPI(title="AutoParts AI Store", lifespan=lifespan)
@@ -71,19 +63,23 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 _ai_service = AIService()
 
-# ─── Schemas ──────────────────────────────────────────────────────────────
+# ─── Schemas & Routes ───────────────────────────────────────────────────────
 class ChatRequest(BaseModel): message: str
 class RegisterRequest(BaseModel): email: str; name: str; password: str
 class LoginRequest(BaseModel): email: str; password: str
 class ProductCreateRequest(BaseModel): nazva: str; brend: str; artikul: str; cina: float; kilkist_sklad: int = 0; katehoriya_id: Optional[int] = None
-class ProductUpdateRequest(BaseModel): nazva: Optional[str] = None; brend: Optional[str] = None; cina: Optional[float] = None; kilkist_sklad: Optional[int] = None
-class OrderCreateRequest(BaseModel): items: list; total: float; buyer_name: str; buyer_phone: str; delivery_method: str; payment_method: str
 
-# ─── Routes ───────────────────────────────────────────────────────────────
 @app.get("/")
 def home(request: Request, db: Session = Depends(get_db)):
     cats = db.execute(select(Katehoriya).options(selectinload(Katehoriya.avtozapchastyny))).scalars().all()
     return templates.TemplateResponse(request=request, name="index.html", context={"categories": cats})
+
+@app.get("/api/me")
+def me(access_token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
+    user_id = _decode_token(access_token) if access_token else None
+    user = db.get(Korystuvach, user_id) if user_id else None
+    if not user: raise HTTPException(status_code=401, detail="Не авторизований")
+    return {"id": user.id, "name": user.imya, "is_admin": user.is_admin}
 
 @app.post("/api/register")
 def register(payload: RegisterRequest, response: Response, db: Session = Depends(get_db)):
@@ -102,39 +98,14 @@ def login(payload: LoginRequest, response: Response, db: Session = Depends(get_d
     response.set_cookie("access_token", _create_token(user.id), httponly=True)
     return {"user": {"id": user.id, "name": user.imya, "is_admin": user.is_admin}}
 
-@app.post("/api/logout")
-def logout(response: Response): response.delete_cookie("access_token"); return {"ok": True}
-
-@app.post("/api/chat")
-async def chat(payload: ChatRequest, db: Session = Depends(get_db)):
-    ai = await _ai_service.consult_client(payload.message)
-    kw = ai.get("search_keyword")
-    prods = db.execute(select(Avtozapchastyna).where(Avtozapchastyna.nazva.ilike(f"%{kw}%")).limit(6)).scalars().all() if kw else []
-    return {"reply": ai.get("reply"), "products": [{"id": p.id, "nazva": p.nazva, "cina": float(p.cina), "artikul": p.artikul} for p in prods]}
-
-@app.post("/api/orders/create")
-def create_order(payload: OrderCreateRequest, db: Session = Depends(get_db)):
-    return {"status": "success", "order_id": f"AP-{random.randint(1000,9999)}"}
-
-    # ─── ДОДАТКОВІ МАРШРУТИ (ДОДАЙ ЇХ В КІНЕЦЬ main.py) ──────────────────────────
-
-@app.get("/api/me")
-def me(current_user: Korystuvach = Depends(lambda access_token=Cookie(None), db=Depends(get_db): get_current_user(access_token, db))):
-    return {"id": current_user.id, "name": current_user.imya, "is_admin": current_user.is_admin}
+@app.post("/api/admin/products")
+def admin_create_product(payload: ProductCreateRequest, db: Session = Depends(get_db)):
+    prod = Avtozapchastyna(nazva=payload.nazva, brend=payload.brend, artikul=payload.artikul, cina=payload.cina, kilkist_sklad=payload.kilkist_sklad, katehoriya_id=payload.katehoriya_id)
+    db.add(prod); db.commit(); return {"ok": True}
 
 @app.get("/admin")
 def admin_page(request: Request, access_token: Optional[str] = Cookie(None), db: Session = Depends(get_db)):
     user_id = _decode_token(access_token) if access_token else None
     user = db.get(Korystuvach, user_id) if user_id else None
-    if not user or not user.is_admin:
-        return RedirectResponse(url="/", status_code=302)
-    return templates.TemplateResponse(request=request, name="admin.html", context={
-        "admin_user": user, 
-        "products": db.execute(select(Avtozapchastyna)).scalars().all(), 
-        "categories": db.execute(select(Katehoriya)).scalars().all()
-    })
-
-@app.get("/api/admin/products")
-def admin_list_products(db: Session = Depends(get_db)):
-    rows = db.execute(select(Avtozapchastyna)).scalars().all()
-    return [{"id": p.id, "nazva": p.nazva, "brend": p.brend, "cina": float(p.cina), "artikul": p.artikul} for p in rows]
+    if not user or not user.is_admin: return RedirectResponse(url="/")
+    return templates.TemplateResponse(request=request, name="admin.html", context={"admin_user": user, "products": db.execute(select(Avtozapchastyna)).scalars().all(), "categories": db.execute(select(Katehoriya)).scalars().all()})
