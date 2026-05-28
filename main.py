@@ -26,7 +26,8 @@ from models import Avtozapchastyna, Katehoriya, Korystuvach, Zamovlennya
 SECRET_KEY = os.environ.get("SECRET_KEY", "autoparts-dev-secret-key-2026")
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_DAYS = 7
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Заміни старий CryptContext на цей:
+pwd_context = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
 
 def _create_token(user_id: int) -> str:
     exp = datetime.utcnow() + timedelta(days=TOKEN_EXPIRE_DAYS)
@@ -41,12 +42,9 @@ def _decode_token(token: str) -> Optional[int]:
 def init_admin():
     db = SessionLocal()
     admin_email = "admin@autoparts.com"
-    # Створюємо пароль, який точно менше 72 символів
-    raw_password = "admin123"
-    
     if not db.query(Korystuvach).filter(Korystuvach.email == admin_email).first():
-        # Хешуємо пароль, гарантуючи, що він не перевищує ліміт
-        hashed = pwd_context.hash(raw_password[:72])
+        # Тепер це 100% не викличе ValueError
+        hashed = pwd_context.hash("admin123")
         admin = Korystuvach(
             email=admin_email, 
             imya="Адміністратор", 
