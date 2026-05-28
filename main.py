@@ -46,9 +46,16 @@ def init_admin():
         db.add(admin); db.commit()
     db.close()
 
+# ─── Lifespan (ініціалізація при старті) ──────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    init_db(); init_admin(); yield
+    try:
+        init_db()
+        init_admin()
+        yield
+    except Exception as e:
+        print(f"CRITICAL ERROR DURING STARTUP: {e}")
+        raise e
 
 app = FastAPI(title="AutoParts AI Store", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -89,28 +96,13 @@ def login(payload: LoginRequest, response: Response, db: Session = Depends(get_d
 @app.post("/api/logout")
 def logout(response: Response): response.delete_cookie("access_token"); return {"ok": True}
 
-@app.get("/api/me")
-def me(current_user: Korystuvach = Depends(lambda access_token=Cookie(None), db=Depends(get_db): get_current_user(access_token, db))):
-    return {"id": current_user.id, "name": current_user.imya, "is_admin": current_user.is_admin}
-
-@app.post("/api/admin/products")
-def admin_create(payload: ProductCreateRequest, db: Session = Depends(get_db)):
-    p = Avtozapchastyna(**payload.model_dump())
-    db.add(p); db.commit(); return {"ok": True}
-
-@app.delete("/api/admin/products/{product_id}")
-def admin_delete(product_id: int, db: Session = Depends(get_db)):
-    p = db.get(Avtozapchastyna, product_id)
-    if p: db.delete(p); db.commit()
-    return {"ok": True}
-
-@app.post("/api/orders/create")
-def create_order(payload: OrderCreateRequest, db: Session = Depends(get_db)):
-    return {"status": "success", "order_id": f"AP-{random.randint(1000,9999)}"}
-
 @app.post("/api/chat")
 async def chat(payload: ChatRequest, db: Session = Depends(get_db)):
     ai = await _ai_service.consult_client(payload.message)
     kw = ai.get("search_keyword")
     prods = db.execute(select(Avtozapchastyna).where(Avtozapchastyna.nazva.ilike(f"%{kw}%")).limit(6)).scalars().all() if kw else []
     return {"reply": ai.get("reply"), "products": [{"id": p.id, "nazva": p.nazva, "cina": float(p.cina), "artikul": p.artikul} for p in prods]}
+
+@app.post("/api/orders/create")
+def create_order(payload: OrderCreateRequest, db: Session = Depends(get_db)):
+    return {"status": "success", "order_id": f"AP-{random.randint(1000,9999)}"}
