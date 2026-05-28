@@ -23,3 +23,9 @@ __pycache__/
 # Системні файли
 .DS_Store
 Thumbs.db
+
+.env
+__pycache__/
+database.db
+.venv/
+.vscode/
