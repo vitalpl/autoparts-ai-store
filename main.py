@@ -41,9 +41,20 @@ def _decode_token(token: str) -> Optional[int]:
 def init_admin():
     db = SessionLocal()
     admin_email = "admin@autoparts.com"
+    # Створюємо пароль, який точно менше 72 символів
+    raw_password = "admin123"
+    
     if not db.query(Korystuvach).filter(Korystuvach.email == admin_email).first():
-        admin = Korystuvach(email=admin_email, imya="Адміністратор", parol_hash=pwd_context.hash("admin123"), is_admin=True)
-        db.add(admin); db.commit()
+        # Хешуємо пароль, гарантуючи, що він не перевищує ліміт
+        hashed = pwd_context.hash(raw_password[:72])
+        admin = Korystuvach(
+            email=admin_email, 
+            imya="Адміністратор", 
+            parol_hash=hashed, 
+            is_admin=True
+        )
+        db.add(admin)
+        db.commit()
     db.close()
 
 # ─── Lifespan (ініціалізація при старті) ──────────────────────────────────
