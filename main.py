@@ -25,6 +25,7 @@ from sqlalchemy.orm import Session, selectinload
 from ai_service import AIService
 from database import get_db, init_db
 from models import Avtozapchastyna, Katehoriya, Korystuvach, Zamovlennya
+from seed import seed as seed_db
 
 # ─── Auth config ────────────────────────────────────────────────────────────
 SECRET_KEY: str = os.environ.get("SECRET_KEY", "autoparts-dev-secret-key-2026")
@@ -76,6 +77,7 @@ def get_admin_user(current_user: Korystuvach = Depends(get_current_user)) -> Kor
 async def lifespan(app: FastAPI):
     """Викликається один раз при запуску сервера — створює та ініціалізує таблиці БД."""
     init_db()
+    seed_db()
     yield
 
 
